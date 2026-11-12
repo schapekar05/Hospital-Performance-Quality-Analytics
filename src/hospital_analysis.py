@@ -48,7 +48,7 @@ clean_df.columns = clean_df.columns.str.strip()
 for column in clean_df.select_dtypes(include="object").columns:
     clean_df[column] = clean_df[column].str.strip()
 
-clean_df = clean_df.replace(r"^\\s*$", pd.NA, regex=True)
+clean_df = clean_df.replace(r"^\s*$", pd.NA, regex=True)
 clean_df = clean_df.dropna(how="all")
 clean_df = clean_df.drop_duplicates()
 
