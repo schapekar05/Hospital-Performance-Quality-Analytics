@@ -1,11 +1,25 @@
-# Tableau starter files
+# Tableau assets — Hospital Performance & Quality Analytics
 
-This repository includes a starter workbook template and a dashboard layout preview.
+These project-specific assets follow the dashboard plan in `docs/tableau_plan.md`.
 
-**Important:** This is not yet a populated Tableau dashboard. The CMS CSV could not be retrieved by the file-access service in this session, so no hospital values or charts have been fabricated.
+## Files
+- [Dashboard specification](TABLEAU_DASHBOARD_SPEC.md): four dashboards, filters, KPI definitions, denominators and interpretation rules.
+- [Data preparation script](prepare_tableau_data.py): prepares the CMS extract and exports Tableau-ready CSVs.
+- [Dashboard layout preview](dashboard_overview.svg): visual wireframe with no invented metrics.
 
-To use the template, place `Hospital_Performance_Dashboard_Template.twb` beside `Hospital_General_Information_2.csv`, open it in Tableau Desktop/Public Desktop, and reconnect the CSV if prompted. Verify the actual field names before building the views.
+## Run the data preparation script
+Keep `Hospital_General_Information_2.csv` in the same folder as the script, then run:
 
-Expected CMS fields include `facility_id`, `facility_name`, `state`, `hospital_type`, `hospital_ownership`, `emergency_services`, and `hospital_overall_rating`.
+```bash
+pip3 install pandas
+python3 prepare_tableau_data.py
+```
 
-CMS source: https://data.cms.gov/provider-data/dataset/xubh-q36u
+Connect Tableau to `tableau_data/cms_hospitals_clean.csv`.
+
+## Data source
+CMS Hospital General Information, dataset ID `xubh-q36u`:
+https://data.cms.gov/provider-data/dataset/xubh-q36u
+
+## Important status
+This repository contains the dashboard design and data-preparation workflow, not a finished populated Tableau workbook. The CSV stored in the repository could not be read by the GitHub file connector during this build, so the actual extract has not been validated and no metrics or workbook results are being claimed. Build/publish the Tableau workbook after connecting the real CMS CSV and checking its fields.
