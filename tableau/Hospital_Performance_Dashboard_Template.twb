@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<workbook original-version="18.1" source-build="2026.11" source-platform="mac" version="18.1">
+  <preferences>
+    <preference name="ui.encoding.shelf" value="utf-8"/>
+  </preferences>
+  <datasources>
+    <datasource caption="CMS Hospital General Information" inline="true" name="federated.hospital_general_information" version="18.1">
+      <connection class="textscan" filename="Hospital_General_Information_2.csv" />
+      <column datatype="string" name="[facility_id]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[facility_name]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[state]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[hospital_type]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[hospital_ownership]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[emergency_services]" role="dimension" type="nominal"/>
+      <column datatype="string" name="[hospital_overall_rating]" role="dimension" type="ordinal"/>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="START HERE">
+      <layout dim-order="行优先"/>
+      <table><view><datasources/></view></table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Hospital Performance Overview" show-tabs="true">
+      <size maxheight="900" maxwidth="1400" minheight="800" minwidth="1200"/>
+      <zones/>
+    </dashboard>
+  </dashboards>
+</workbook>
