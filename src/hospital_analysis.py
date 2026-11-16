@@ -1,17 +1,10 @@
-from pathlib import Path
 import pandas as pd
-import matplotlib.pyplot as plt
+from pathlib import Path
 
-# Read the CMS file from the main project folder
-input_file = Path("Hospital_General_Information_2.csv")
-output_folder = Path("output")
-output_folder.mkdir(exist_ok=True)
-chart_folder = output_folder / "charts"
-chart_folder.mkdir(exist_ok=True)
+# Load the hospital data
+df = pd.read_csv("Hospital_General_Information_2.csv")
 
-df = pd.read_csv(input_file, dtype={"facility_id": "string"})
-
-# Make column names consistent
+# Clean column names
 df.columns = (
     df.columns.str.strip()
     .str.lower()
@@ -19,76 +12,42 @@ df.columns = (
     .str.replace("/", "_", regex=False)
 )
 
-# Clean text values
+# Clean text columns
 for column in df.select_dtypes(include="object").columns:
     df[column] = df[column].str.strip()
 
+# Remove blank and duplicate rows
 df = df.replace(r"^\s*$", pd.NA, regex=True)
 df = df.dropna(how="all")
-rows_before_deduplication = len(df)
 df = df.drop_duplicates()
-duplicates_removed = rows_before_deduplication - len(df)
 
-# Keep hospital IDs as text and convert rating to a number
-if "facility_id" in df.columns:
-    df["facility_id"] = df["facility_id"].astype("string").str.strip()
+# Set correct data types
+df["facility_id"] = df["facility_id"].astype("string")
+df["hospital_overall_rating"] = pd.to_numeric(
+    df["hospital_overall_rating"], errors="coerce"
+)
 
-if "hospital_overall_rating" in df.columns:
-    df["hospital_overall_rating"] = pd.to_numeric(
-        df["hospital_overall_rating"], errors="coerce"
-    )
+# Create output folder
+output = Path("output")
+output.mkdir(exist_ok=True)
 
-# Save the cleaned dataset
-df.to_csv(output_folder / "cleaned_hospitals.csv", index=False)
+# Save cleaned data for Tableau
+df.to_csv(output / "cleaned_hospitals.csv", index=False)
 
-print("\nHOSPITAL PERFORMANCE & QUALITY ANALYTICS")
-print("-----------------------------------------")
-print("Total hospitals:", len(df))
-print("Total columns:", len(df.columns))
-print("Duplicate rows removed:", duplicates_removed)
+# Hospital count by state
+df["state"].value_counts().to_csv(output / "hospitals_by_state.csv")
 
-# Hospitals by state
-if "state" in df.columns:
-    state_summary = (
-        df.groupby("state", dropna=False)
-        .size()
-        .reset_index(name="hospital_count")
-        .sort_values("hospital_count", ascending=False)
-    )
-    state_summary.to_csv(output_folder / "hospitals_by_state.csv", index=False)
-    print("\nTop 10 states:")
-    print(state_summary.head(10).to_string(index=False))
-
-# Overall hospital ratings
-if "hospital_overall_rating" in df.columns:
-    rating_summary = (
-        df["hospital_overall_rating"]
-        .value_counts(dropna=False)
-        .sort_index()
-        .reset_index()
-    )
-    rating_summary.columns = ["overall_rating", "hospital_count"]
-    rating_summary.to_csv(output_folder / "rating_distribution.csv", index=False)
-    print("\nRating distribution:")
-    print(rating_summary.to_string(index=False))
-
-# Hospital type and ownership
-for column in ["hospital_type", "hospital_ownership", "emergency_services"]:
-    if column in df.columns:
-        summary = (
-            df[column].fillna("Not reported")
-            .value_counts()
-            .rename_axis(column)
-            .reset_index(name="hospital_count")
-        )
-        summary.to_csv(output_folder / f"{column}_summary.csv", index=False)
+# Hospital rating distribution
+df["hospital_overall_rating"].value_counts().sort_index().to_csv(
+    output / "rating_distribution.csv"
+)
 
 # Missing values report
-missing = pd.DataFrame({
-    "column": df.columns,
-    "missing_count": df.isna().sum().values,
-    "missing_percent": (df.isna().mean().values * 100).round(2)
-})
-missing.to_csv(output_folder / "missing_values_report.csv", index=False)
+missing = df.isna().sum().reset_index()
+missing.columns = ["column", "missing_count"]
+missing.to_csv(output / "missing_values_report.csv", index=False)
 
-print("\nAnalysis complete. Check the output folder for CSV reports.")
+print("Analysis completed.")
+print("Total hospitals:", len(df))
+print("Total columns:", len(df.columns))
+print("Cleaned data and summary files saved in the output folder.")
