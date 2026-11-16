@@ -1,48 +1,39 @@
-# Tableau Dashboard Build — Hospital Performance & Quality Analytics
+# Tableau Dashboard Specification
 
-This dashboard specification follows `docs/tableau_plan.md` and the CMS Hospital General Information dataset (dataset ID `xubh-q36u`).
+This file describes the charts to build in Tableau. It is a build guide, not a finished workbook.
 
-## Data source and scope
-- Source: CMS Hospital General Information (hospital-level aggregate/general information).
-- Dataset page: https://data.cms.gov/provider-data/dataset/xubh-q36u
-- Catalog schema: 38 columns, including `facility_id`, `facility_name`, `state`, `hospital_type`, `hospital_ownership`, `emergency_services`, `hospital_overall_rating`, and CMS group-measure fields.
-- Treat `facility_id` as a text dimension/key, never as a measure.
-- Display CMS release/last-modified date and the extract download date.
-- This is not patient-level data.
+## 1. Hospital Overview
+- KPI: total hospitals (distinct facility_id)
+- KPI: states covered (distinct state)
+- KPI: hospitals with an overall rating
+- KPI: rating coverage
+- Bar chart: hospital count by state
+- Donut: hospital ownership mix
+- Bar chart: hospital count by hospital type
 
-## Dashboard 1 — Executive Overview
-KPI tiles: distinct hospitals, states covered, hospitals with an overall rating, rating coverage.
-Charts: hospital count by state; overall rating distribution with rated-hospital denominator; ownership mix.
+## 2. Hospital Ratings
+- Bar chart: overall rating distribution (1–5)
+- 100% stacked bars: rating mix by state
+- Highlight table: state and rating
+- Keep unrated hospitals separate from rated hospitals.
 
-## Dashboard 2 — Hospital Ratings
-- Overall rating distribution (1–5 plus null/not rated separately).
-- Rating mix by state (100% stacked bars; show rated denominator).
-- Filters: State, Hospital Type, Hospital Ownership, Emergency Services.
-- Do not rank individual hospitals or imply causality.
+## 3. Hospital Services & Profile
+- Bar chart: hospital type
+- Stacked bar: emergency services
+- Bar chart: hospital ownership
+- Filled map: hospital count by state, after validating geographic roles.
 
-## Dashboard 3 — Hospital Profile
-- Hospital count by hospital type.
-- Hospital count by ownership.
-- Emergency services yes/no/unknown mix.
-- Optional state map only if Tableau recognizes state values as a geographic role.
+## 4. Data Quality
+- Bar chart: missing values by column
+- KPI: duplicate facility IDs
+- Table: field name, missing count, missing percentage
+- KPI: total records
 
-## Dashboard 4 — Data Coverage
-Show non-null count, missing count and missing percentage by field.
-Measure-group coverage fields: `count_of_facility_mort_measures`, `count_of_facility_safety_measures`, `count_of_facility_readm_measures`, `count_of_facility_pt_exp_measures`, `count_of_facility_te_measures`.
-Keep null, zero and footnoted/not-applicable values distinct.
+## Filters
+State, hospital type, hospital ownership and emergency services.
 
-## Global filters
-`state`, `hospital_type`, `hospital_ownership`, `emergency_services` (if present).
+## Design
+Use a clean healthcare-style layout, consistent chart titles, readable labels, informative tooltips and visible data-source notes. Put KPI cards at the top and filters to the side.
 
-## Denominators and interpretation
-- Rating coverage denominator = all distinct hospitals in the filtered extract.
-- Rating distribution denominator = hospitals with non-null overall rating in the filtered extract.
-- Category percentages must show count and denominator.
-- Do not combine measures across incompatible reporting periods.
-- Descriptive association is not causation.
-
-## Build sequence
-1. Run `prepare_tableau_data.py` beside the CMS CSV.
-2. Connect Tableau to `tableau_data/cms_hospitals_clean.csv`.
-3. Build the four dashboards above.
-4. Verify field names against the actual CSV before publishing.
+## Data interpretation
+Use distinct facility IDs for hospital counts. Rating distribution uses rated hospitals as its denominator; rating coverage uses all hospitals. Do not imply causation or compare measure groups without checking CMS definitions and reporting periods.
