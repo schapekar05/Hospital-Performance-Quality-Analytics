@@ -21,7 +21,10 @@ for column in df.select_dtypes(include="object").columns:
     df[column] = df[column].str.strip()
 
 df = df.replace(r"^\s*$", pd.NA, regex=True)
-df = df.dropna(how="all").drop_duplicates()
+df = df.dropna(how="all")
+rows_before_deduplication = len(df)
+df = df.drop_duplicates()
+duplicates_removed = rows_before_deduplication - len(df)
 
 # Keep hospital IDs as text and convert rating to a number
 if "facility_id" in df.columns:
