@@ -29,6 +29,7 @@ Hospital-Performance-Quality-Analytics/
 ├── tableau/
 │   ├── README.md
 │   ├── TABLEAU_DASHBOARD_SPEC.md
+│   ├── dashboard_guide.md
 │   └── dashboard_overview.svg
 └── docs/
     └── tableau_plan.md
@@ -65,7 +66,7 @@ The queries cover hospital counts, state distribution, hospital ownership, ratin
 
 Connect Tableau to the cleaned file `output/cleaned_hospitals.csv` after running the Python script.
 
-Build the dashboard views described in [Tableau Dashboard Specification](tableau/TABLEAU_DASHBOARD_SPEC.md):
+Follow the [Tableau Dashboard Guide](tableau/dashboard_guide.md) and [Tableau Dashboard Specification](tableau/TABLEAU_DASHBOARD_SPEC.md) to build:
 - Executive overview and KPI cards
 - Hospital ratings and rating distribution
 - Hospital type and ownership
