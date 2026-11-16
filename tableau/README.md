@@ -1,25 +1,11 @@
-# Tableau assets — Hospital Performance & Quality Analytics
+# Tableau Dashboard
 
-These project-specific assets follow the dashboard plan in `docs/tableau_plan.md`.
+Use the cleaned dataset created by the Python script:
 
-## Files
-- [Dashboard specification](TABLEAU_DASHBOARD_SPEC.md): four dashboards, filters, KPI definitions, denominators and interpretation rules.
-- [Data preparation script](prepare_tableau_data.py): prepares the CMS extract and exports Tableau-ready CSVs.
-- [Dashboard layout preview](dashboard_overview.svg): visual wireframe with no invented metrics.
+`output/cleaned_hospitals.csv`
 
-## Run the data preparation script
-Keep `Hospital_General_Information_2.csv` in the same folder as the script, then run:
+Open Tableau Public/Desktop, connect to the CSV, and build the four dashboards in [TABLEAU_DASHBOARD_SPEC.md](TABLEAU_DASHBOARD_SPEC.md).
 
-```bash
-pip3 install pandas
-python3 prepare_tableau_data.py
-```
+The dashboard design includes KPI cards, bar charts, a rating distribution, ownership mix, a state map and a data-completeness view. The SVG file is a wireframe preview only; it is not a finished Tableau workbook.
 
-Connect Tableau to `tableau_data/cms_hospitals_clean.csv`.
-
-## Data source
-CMS Hospital General Information, dataset ID `xubh-q36u`:
-https://data.cms.gov/provider-data/dataset/xubh-q36u
-
-## Important status
-This repository contains the dashboard design and data-preparation workflow, not a finished populated Tableau workbook. The CSV stored in the repository could not be read by the GitHub file connector during this build, so the actual extract has not been validated and no metrics or workbook results are being claimed. Build/publish the Tableau workbook after connecting the real CMS CSV and checking its fields.
+Source: [CMS Hospital General Information](https://data.cms.gov/provider-data/dataset/xubh-q36u).
