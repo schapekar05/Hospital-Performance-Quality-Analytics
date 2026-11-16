@@ -1,10 +1,13 @@
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Read the CMS file from the main project folder
 input_file = Path("Hospital_General_Information_2.csv")
 output_folder = Path("output")
 output_folder.mkdir(exist_ok=True)
+chart_folder = output_folder / "charts"
+chart_folder.mkdir(exist_ok=True)
 
 df = pd.read_csv(input_file, dtype={"facility_id": "string"})
 
