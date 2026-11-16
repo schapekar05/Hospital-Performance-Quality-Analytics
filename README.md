@@ -1,60 +1,85 @@
 # Hospital Performance & Quality Analytics
 
-An independent analytics project using publicly available, hospital-level data
-published by the U.S. Centers for Medicare & Medicaid Services (CMS).
+An independent Data Analyst portfolio project using the U.S. Centers for Medicare & Medicaid Services (CMS) Hospital General Information dataset.
 
-**Tools:** Python, SQL, Tableau
+**Tools:** Python, SQL, Tableau, Excel/CSV
 
-The project examines hospital profiles, quality-rating coverage, and variation
-across geography, hospital type, and ownership. It is an independent portfolio
-analysis, not commissioned by CMS or any hospital.
+## Business objective
+Explore the U.S. hospital landscape and understand how hospital ratings, ownership, hospital type and emergency-service availability vary across states. Review the completeness of the published data before interpreting results.
 
-## Data source
-- CMS Hospital General Information: https://data.cms.gov/provider-data/dataset/xubh-q36u
-- CMS Provider Data: https://data.cms.gov/provider-data/datasets?theme%5B0%5D=Hospitals
+## Dataset
+- Source: [CMS Hospital General Information](https://data.cms.gov/provider-data/dataset/xubh-q36u)
+- Dataset ID: `xubh-q36u`
+- File in this repository: `Hospital_General_Information_2.csv`
+- The dataset contains hospital-level information. It is not patient-level data.
 
-Download the CSV from the official CMS dataset page and place it at:
-data/raw/Hospital_General_Information_2.csv
+## Project structure
+```
+Hospital-Performance-Quality-Analytics/
+├── Hospital_General_Information_2.csv
+├── README.md
+├── requirements.txt
+├── src/
+│   └── hospital_analysis.py
+├── output/
+│   └── generated CSV reports (created when the script runs)
+├── sql/
+│   ├── README.md
+│   └── hospital_analysis.sql
+├── tableau/
+│   ├── README.md
+│   ├── TABLEAU_DASHBOARD_SPEC.md
+│   └── dashboard_overview.svg
+└── docs/
+    └── tableau_plan.md
+```
 
-The raw source file is not committed here by default. Follow the dataset's
-current terms and repository size limits before publishing a copy.
+## 1. Python analysis
 
-## Repository layout
-- data/raw/ — original CMS extract (local; not tracked by default)
-- src/profile_cms_data.py — schema and data-quality profiling
-- outputs/ — generated profiling reports (local)
-- sql/ — SQL workflow and analysis queries
-- docs/ — dashboard plan and methodology notes
+Install the required library:
 
-## Run the first data check
-    python -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    python src/profile_cms_data.py --input data/raw/Hospital_General_Information_2.csv
+```bash
+pip install -r requirements.txt
+```
 
-The script creates outputs/data_profile.json with actual row count, columns,
-data types, likely identifiers, and duplicate count; and
-outputs/missingness_report.csv with missing counts and percentages.
+Run the script from the repository's main folder:
 
-Provider identifiers are read as strings to preserve leading zeroes. The script
-does not hard-code presumed row or column counts.
+```bash
+python src/hospital_analysis.py
+```
 
-## Analysis plan
-1. Validate schema, identifiers, duplicates, and missingness.
-2. Clean and standardize fields while retaining an auditable raw extract.
-3. Build SQL quality checks and descriptive aggregations from the observed schema.
-4. Develop Tableau views for hospital profiles, rating distributions, and
-   geographic/ownership comparisons where coverage supports them.
-5. Document definitions, reporting periods, denominators, extraction date,
-   and limitations.
+The script:
+- Loads the CMS CSV and standardizes column names.
+- Removes blank rows and duplicate records.
+- Keeps facility IDs as text.
+- Converts hospital ratings to numeric values.
+- Creates a cleaned CSV, state summary, rating summary, category summaries and missing-values report in the `output/` folder.
 
-## Interpretation notes
-CMS hospital-level measures may have different reporting periods, denominators,
-and eligibility rules. Do not compare measures without checking their definitions
-in the relevant CMS data dictionary. This project is descriptive and does not
-establish causal relationships or measure individual patient outcomes.
+## 2. SQL analysis
 
-## Current status
-Project setup and initial profiling script are in place. Empirical findings,
-SQL outputs, and Tableau dashboards will be added only after validating the
-actual CMS extract. No findings or performance figures are fabricated.
+Open `sql/hospital_analysis.sql` in SQLite, DB Browser for SQLite, MySQL or another SQL editor. Import the CMS CSV into a table named `hospitals` first. Keep `facility_id` as text.
+
+The queries cover hospital counts, state distribution, hospital ownership, ratings, emergency services, missing values and duplicate facility IDs.
+
+## 3. Tableau dashboard
+
+Connect Tableau to the cleaned file `output/cleaned_hospitals.csv` after running the Python script.
+
+Build the dashboard views described in [Tableau Dashboard Specification](tableau/TABLEAU_DASHBOARD_SPEC.md):
+- Executive overview and KPI cards
+- Hospital ratings and rating distribution
+- Hospital type and ownership
+- State-level hospital distribution
+- Data completeness
+
+The SVG in the Tableau folder is a layout preview, not a populated Tableau workbook. Publish a Tableau workbook only after building and validating the charts with the actual CSV.
+
+## Important data notes
+- Treat `facility_id` as a text identifier, not a numeric measure.
+- Show the denominator when displaying percentages.
+- Keep missing or not-reported ratings separate from actual rating values.
+- Check CMS definitions and reporting periods before comparing quality measures.
+- This is descriptive analysis; it does not establish that ownership or location causes a hospital to perform better or worse.
+
+## Project status
+Python code, SQL queries and Tableau dashboard instructions are provided. Run the Python script and build the Tableau workbook to generate and validate the final results.
