@@ -39,7 +39,7 @@ print("\nHOSPITAL PERFORMANCE & QUALITY ANALYTICS")
 print("-----------------------------------------")
 print("Total hospitals:", len(df))
 print("Total columns:", len(df.columns))
-print("Duplicate rows removed:", "See source file comparison")
+print("Duplicate rows removed:", duplicates_removed)
 
 # Hospitals by state
 if "state" in df.columns:
