@@ -1,15 +1,8 @@
-# SQL analysis workflow
+# SQL analysis
 
-The SQL layer will be built after the downloaded CMS CSV has been profiled.
+1. Import `Hospital_General_Information_2.csv` into SQLite or another SQL database.
+2. Name the table `hospitals`.
+3. Keep `facility_id` as TEXT and preserve null values.
+4. Open and run `hospital_analysis.sql`.
 
-Planned work:
-1. Load the validated extract into a staging table.
-2. Check provider-ID uniqueness, nulls, and duplicate records.
-3. Aggregate hospital counts by state, ownership, and hospital type.
-4. Analyze overall rating distributions only where populated.
-5. Compare quality measures only after confirming their definitions and reporting periods.
-
-Use the exact column names and types observed in outputs/data_profile.json.
-Keep provider identifiers as text. Do not assume different measures share a
-reporting period, denominator, or interpretation. No placeholder performance
-figures are reported.
+The queries demonstrate SELECT, COUNT, GROUP BY, ORDER BY, WHERE, IS NULL and HAVING using hospital data.
