@@ -6,15 +6,15 @@ df = pd.read_csv("Hospital_General_Information_2.csv", dtype={"Facility ID": "st
 
 # Clean column names
 df.columns = df.columns.str.strip().str.lower()
-df.columns = df.columns.str.replace(" ", "_", regex=False)
-df.columns = df.columns.str.replace("/", "_", regex=False)
+df.columns = df.columns.str.replace(" ", "_")
+df.columns = df.columns.str.replace("/", "_")
 
 # Remove extra spaces from text
 for column in df.select_dtypes(include="object").columns:
     df[column] = df[column].str.strip()
 
 # Replace blank cells with missing values
-df = df.replace(r"^\s*$", pd.NA, regex=True)
+df = df.replace("", pd.NA)
 
 # Remove empty rows and duplicate records
 df = df.dropna(how="all")
@@ -32,4 +32,3 @@ df.to_csv("output/cleaned_hospitals.csv", index=False)
 
 print("Data cleaning completed.")
 print("Total hospitals:", len(df))
-print("Duplicate rows removed during cleaning.")
